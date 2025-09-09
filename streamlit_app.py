@@ -1,23 +1,20 @@
 import os
 import streamlit as st
-from openai import OpenAI
+from groq import Groq
 from docx import Document
 
-API_KEY = os.getenv("OPENAI_API_KEY")
-
+from groq import Groq
+API_KEY = os.getenv("GROQ_API_KEY")
 if not API_KEY:
-    st.error(
-        "OpenAI API key ontbreekt. Zet 'OPENAI_API_KEY' als Codespaces secret "
-        "of exporteer 'OPENAI_API_KEY' in je terminal."
-    )
+    st.error("Groq API key ontbreekt.")
     st.stop()
-    
-client = OpenAI(api_key=API_KEY)
+
+client = Groq(api_key=API_KEY)
 
 # Show title and description.
 st.title("📄 Document question answering")
 st.write(
-    "Upload a document below and ask a question about it – GPT will answer! "
+    "Upload a documet below and ask a question about it – GPT will answer! "
 )
 # Let the user upload a file via `st.file_uploader`.
 uploaded_file = st.file_uploader(
@@ -49,7 +46,7 @@ if uploaded_file and question:
 
     # Generate an answer using the OpenAI API.
     stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="llama-3.1-8b-instant",
         messages=messages,
         stream=True,
     )
